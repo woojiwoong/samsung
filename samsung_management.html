@@ -223,9 +223,149 @@ th:last-child,td:last-child{border-right:0}
 .rng::-moz-range-progress{height:8px;border-radius:99px;background:var(--red)}
 .rng::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--blue);border:3px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.35)}
 .rng:focus-visible{outline:3px solid #f0b4b4;outline-offset:2px}
+
+/* ===== 사용자 인증 화면 ===== */
+html.ag-locked,html.ag-locked body{overflow:hidden}
+#access-gate{
+  position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;
+  font-family:'Noto Sans KR',system-ui,-apple-system,'Malgun Gothic',sans-serif;color:#fff;
+  background:
+    radial-gradient(1200px 700px at 12% -10%,#1d4f8f 0%,transparent 60%),
+    radial-gradient(900px 600px at 105% 110%,#0f6a8f 0%,transparent 55%),
+    linear-gradient(160deg,#08182f 0%,#0c2447 55%,#0a1b36 100%);
+  transition:opacity .55s ease,visibility .55s
+}
+#access-gate.ag-hide{opacity:0;visibility:hidden;pointer-events:none}
+#access-gate *{box-sizing:border-box}
+.ag-grid{
+  position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);
+  background-size:44px 44px;
+  -webkit-mask-image:radial-gradient(circle at 50% 42%,#000 0%,transparent 72%);
+  mask-image:radial-gradient(circle at 50% 42%,#000 0%,transparent 72%)
+}
+.ag-orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.5;pointer-events:none;animation:ag-float 14s ease-in-out infinite}
+.ag-orb.a{width:340px;height:340px;background:#2f7de1;top:-90px;left:-70px}
+.ag-orb.b{width:300px;height:300px;background:#18b2c9;bottom:-100px;right:-60px;animation-delay:-6s}
+@keyframes ag-float{50%{transform:translate(30px,24px) scale(1.08)}}
+.ag-card{
+  position:relative;width:100%;max-width:400px;padding:38px 30px 24px;border-radius:26px;
+  background:linear-gradient(160deg,rgba(255,255,255,.15),rgba(255,255,255,.05));
+  border:1px solid rgba(255,255,255,.2);
+  -webkit-backdrop-filter:blur(22px) saturate(140%);backdrop-filter:blur(22px) saturate(140%);
+  box-shadow:0 30px 80px rgba(2,10,30,.55),inset 0 1px 0 rgba(255,255,255,.25);
+  animation:ag-in .7s cubic-bezier(.2,.8,.2,1) both;
+  transition:transform .45s ease,opacity .45s ease
+}
+.ag-card.ag-ok{transform:scale(.95) translateY(-6px);opacity:0}
+@keyframes ag-in{from{opacity:0;transform:translateY(22px) scale(.97)}to{opacity:1;transform:none}}
+.ag-emblem{
+  position:relative;width:68px;height:68px;margin:0 auto 18px;border-radius:20px;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(145deg,#4c93f0 0%,#1f56b3 100%);
+  box-shadow:0 12px 30px rgba(47,125,225,.5),inset 0 1px 0 rgba(255,255,255,.45)
+}
+.ag-emblem::after{content:"";position:absolute;inset:-7px;border-radius:26px;border:1px solid rgba(120,180,255,.35)}
+.ag-brand{margin:0;text-align:center;font-size:1.45rem;font-weight:800;letter-spacing:-.02em}
+.ag-sub{margin:6px 0 0;text-align:center;font-size:.86rem;color:rgba(255,255,255,.72);letter-spacing:.01em}
+.ag-divider{height:1px;margin:24px 0 20px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent)}
+.ag-desc{margin:0 0 18px;text-align:center;font-size:.9rem;line-height:1.6;color:rgba(255,255,255,.8)}
+.ag-field{
+  display:flex;align-items:center;gap:10px;padding:0 8px 0 16px;border-radius:14px;
+  background:rgba(6,20,45,.45);border:1.5px solid rgba(255,255,255,.2);
+  transition:border-color .2s,box-shadow .2s,background .2s
+}
+.ag-field:focus-within{border-color:#6db3ff;box-shadow:0 0 0 4px rgba(80,160,255,.22);background:rgba(6,20,45,.6)}
+.ag-field.ag-err{border-color:#ff7a85;box-shadow:0 0 0 4px rgba(255,90,105,.18)}
+.ag-field.ag-shake{animation:ag-shake .45s}
+@keyframes ag-shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+.ag-field>svg{flex:0 0 auto;opacity:.7}
+#secretInput{
+  flex:1;min-width:0;height:52px;padding:0;border:0;outline:0;background:transparent;
+  color:#fff;font:inherit;font-size:16px;letter-spacing:.04em
+}
+#secretInput::placeholder{color:rgba(255,255,255,.42);letter-spacing:0}
+.ag-eye{
+  flex:0 0 auto;width:40px;height:40px;border:0;border-radius:10px;background:transparent;
+  color:rgba(255,255,255,.7);cursor:pointer;display:flex;align-items:center;justify-content:center
+}
+.ag-eye:hover{background:rgba(255,255,255,.1);color:#fff}
+.ag-eye:focus-visible,.ag-btn:focus-visible{outline:3px solid #9ccaff;outline-offset:2px}
+.ag-error{display:none;margin:12px 2px 0;text-align:center;font-size:.85rem;font-weight:500;color:#ffb3b9}
+.ag-btn{
+  position:relative;width:100%;height:54px;margin-top:18px;border:0;border-radius:14px;cursor:pointer;
+  font:inherit;font-size:1rem;font-weight:700;color:#fff;letter-spacing:.02em;overflow:hidden;
+  background:linear-gradient(135deg,#3b82f0 0%,#1f56b3 100%);
+  box-shadow:0 12px 28px rgba(31,86,179,.55),inset 0 1px 0 rgba(255,255,255,.35);
+  transition:transform .15s,box-shadow .2s,filter .2s
+}
+.ag-btn::before{
+  content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);transition:left .6s
+}
+.ag-btn:hover:not(:disabled)::before{left:130%}
+.ag-btn:hover:not(:disabled){filter:brightness(1.08)}
+.ag-btn:active:not(:disabled){transform:scale(.985)}
+.ag-btn:disabled{cursor:not-allowed;filter:saturate(.6) brightness(.85)}
+.ag-spin{display:none;width:20px;height:20px;margin-left:8px;vertical-align:-4px;border-radius:50%;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;animation:ag-rot .7s linear infinite}
+.ag-btn.loading .ag-spin{display:inline-block}
+@keyframes ag-rot{to{transform:rotate(360deg)}}
+.ag-foot{display:flex;align-items:center;justify-content:center;gap:6px;margin:20px 0 0;font-size:.76rem;color:rgba(255,255,255,.5)}
+#resetAuthBtn{
+  display:none;position:fixed;right:20px;bottom:20px;z-index:9999;align-items:center;gap:7px;
+  padding:11px 16px;border:1px solid rgba(255,255,255,.18);border-radius:999px;cursor:pointer;
+  background:rgba(15,39,66,.88);color:#fff;font-family:inherit;font-size:.82rem;font-weight:600;
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 8px 22px rgba(10,25,50,.3);
+  transition:background .2s,transform .15s
+}
+#resetAuthBtn:hover{background:rgba(31,86,179,.95)}
+#resetAuthBtn:active{transform:scale(.97)}
+@media(max-width:520px){.ag-card{padding:32px 22px 22px}#resetAuthBtn{right:14px;bottom:14px}}
+@media(prefers-reduced-motion:reduce){.ag-orb,.ag-card,.ag-field.ag-shake{animation:none}#access-gate,.ag-card{transition:none}}
+@media print{#access-gate,#resetAuthBtn{display:none!important}}
 </style>
 </head>
 <body>
+
+<!-- 인증 초기화 버튼 -->
+<button type="button" id="resetAuthBtn" aria-label="인증 초기화">
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line>
+  </svg>
+  인증 초기화
+</button>
+
+<!-- 접근 제한 화면 -->
+<div id="access-gate" role="dialog" aria-modal="true" aria-labelledby="agTitle">
+  <div class="ag-grid"></div><div class="ag-orb a"></div><div class="ag-orb b"></div>
+  <div class="ag-card" id="agCard">
+    <div class="ag-emblem">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="3.5" y="11" width="17" height="10.5" rx="2.5"></rect><path d="M7.5 11V7.5a4.5 4.5 0 0 1 9 0V11"></path><circle cx="12" cy="16.2" r="1.3" fill="#fff" stroke="none"></circle>
+      </svg>
+    </div>
+    <h1 class="ag-brand" id="agTitle">삼성생명</h1>
+    <p class="ag-sub">차월 수수료 관리 시스템</p>
+    <div class="ag-divider"></div>
+    <p class="ag-desc">허가된 사용자만 접근할 수 있습니다.<br>비밀코드를 입력해 주세요.</p>
+
+    <div class="ag-field" id="agField">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"></circle><path d="M10.8 12.2 20 3"></path><path d="m16 7 3 3"></path></svg>
+      <input type="password" id="secretInput" placeholder="비밀코드 입력" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="비밀코드">
+      <button type="button" class="ag-eye" id="agEye" aria-label="비밀코드 표시">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+      </button>
+    </div>
+    <p id="secretError" class="ag-error" role="alert"></p>
+
+    <button type="button" id="secretBtn" class="ag-btn"><span id="secretBtnTxt">확인</span><span class="ag-spin"></span></button>
+    <p class="ag-foot">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 4.5 3.3 8 8 9 4.7-1 8-4.5 8-9V6l-8-3Z"></path><path d="m9 12 2 2 4-4"></path></svg>
+      허가된 사용자 전용 · 인증 후 이 기기에서 유지됩니다
+    </p>
+  </div>
+</div>
+
 <div class="container">
 
 <header class="hero">
@@ -598,5 +738,182 @@ th:last-child,td:last-child{border-right:0}
   document.addEventListener('keydown',function(e){if(e.key==='Escape'&&modal.classList.contains('open'))close();});
 })();
 </script>
+
+<!-- ========== Firebase + 접근 제한 ========== -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB79WT4WxYCFMp3TJnIbJiRVNfmkRnI50U",
+    authDomain: "samsung-12eb0.firebaseapp.com",
+    projectId: "samsung-12eb0",
+    storageBucket: "samsung-12eb0.firebasestorage.app",
+    messagingSenderId: "603735386896",
+    appId: "1:603735386896:web:046e60c0497f99dd6d9395"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const TOKEN_KEY = "samsung_access_token_v1";
+  const LOCK_KEY = "samsung_gate_lock_until";
+  const MAX_FAIL = 5, LOCK_MS = 30000;
+  const $ = (id) => document.getElementById(id);
+  const root = document.documentElement;
+  let fails = 0, lockTimer = null;
+
+  function store(fn){ try { return fn(); } catch (e) { return null; } }
+
+  function showGate() {
+    root.classList.add("ag-locked");
+    $("agCard").classList.remove("ag-ok");
+    $("access-gate").classList.remove("ag-hide");
+    $("resetAuthBtn").style.display = "none";
+    setTimeout(() => { const i = $("secretInput"); if (i) i.focus(); }, 200);
+    checkLock();
+  }
+  function hideGate(animate) {
+    const gate = $("access-gate");
+    root.classList.remove("ag-locked");
+    if (animate) {
+      $("agCard").classList.add("ag-ok");
+      setTimeout(() => gate.classList.add("ag-hide"), 180);
+    } else {
+      gate.classList.add("ag-hide");
+    }
+    $("resetAuthBtn").style.display = "flex";
+  }
+
+  function showError(msg) {
+    const el = $("secretError");
+    el.textContent = msg;
+    el.style.display = "block";
+  }
+  function clearError() {
+    $("secretError").style.display = "none";
+    $("agField").classList.remove("ag-err");
+  }
+  function shake() {
+    const f = $("agField");
+    f.classList.add("ag-err", "ag-shake");
+    setTimeout(() => f.classList.remove("ag-shake"), 480);
+  }
+
+  function checkLock() {
+    const until = +store(() => localStorage.getItem(LOCK_KEY)) || 0;
+    const btn = $("secretBtn"), input = $("secretInput");
+    clearInterval(lockTimer);
+    function tick() {
+      const left = Math.ceil((until - Date.now()) / 1000);
+      if (left > 0) {
+        btn.disabled = true; input.disabled = true;
+        $("secretBtnTxt").textContent = left + "초 후 재시도";
+        showError("입력 오류가 반복되어 잠시 제한됩니다.");
+        return true;
+      }
+      clearInterval(lockTimer);
+      input.disabled = false; btn.disabled = false;
+      $("secretBtnTxt").textContent = "확인";
+      if (until) { store(() => localStorage.removeItem(LOCK_KEY)); clearError(); }
+      return false;
+    }
+    if (until && tick()) lockTimer = setInterval(tick, 500);
+  }
+
+  async function sha256(text) {
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  // 비밀코드 확인 (Firestore: config/SECRET_CODE → CODE 또는 CODE_HASH(SHA-256))
+  async function checkSecret() {
+    const input = $("secretInput"), btn = $("secretBtn");
+    const value = input.value.trim();
+
+    if (!value) {
+      showError("비밀코드를 입력해주세요.");
+      shake();
+      return;
+    }
+
+    btn.disabled = true;
+    btn.classList.add("loading");
+    $("secretBtnTxt").textContent = "확인 중";
+    clearError();
+
+    try {
+      const snap = await getDoc(doc(db, "config", "SECRET_CODE"));
+      if (!snap.exists()) {
+        showError("서버 설정 오류가 발생했습니다.");
+        return;
+      }
+      const data = snap.data();
+      let ok = false;
+      if (data.CODE_HASH) {
+        ok = (await sha256(value)) === String(data.CODE_HASH).toLowerCase();
+      } else {
+        ok = value === String(data.CODE);
+      }
+
+      if (ok) {
+        store(() => { localStorage.setItem(TOKEN_KEY, "granted"); localStorage.removeItem(LOCK_KEY); });
+        fails = 0;
+        input.value = "";
+        hideGate(true);
+      } else {
+        fails++;
+        input.value = "";
+        shake();
+        if (fails >= MAX_FAIL) {
+          fails = 0;
+          store(() => localStorage.setItem(LOCK_KEY, String(Date.now() + LOCK_MS)));
+          checkLock();
+        } else {
+          showError("비밀코드가 올바르지 않습니다. (" + fails + "/" + MAX_FAIL + ")");
+          input.focus();
+        }
+      }
+    } catch (error) {
+      showError("서버 연결에 실패했습니다.");
+    } finally {
+      btn.classList.remove("loading");
+      if (!(+store(() => localStorage.getItem(LOCK_KEY)) > Date.now())) {
+        btn.disabled = false;
+        $("secretBtnTxt").textContent = "확인";
+      }
+    }
+  }
+
+  // 인증 초기화
+  function resetAuth() {
+    if (confirm("인증을 초기화하시겠습니까?\n다시 비밀코드를 입력해야 합니다.")) {
+      store(() => localStorage.removeItem(TOKEN_KEY));
+      $("secretInput").value = "";
+      clearError();
+      showGate();
+    }
+  }
+  window.checkSecret = checkSecret;
+  window.resetAuth = resetAuth;
+
+  // 이벤트
+  $("secretBtn").addEventListener("click", checkSecret);
+  $("resetAuthBtn").addEventListener("click", resetAuth);
+  $("secretInput").addEventListener("keydown", (e) => { if (e.key === "Enter") checkSecret(); });
+  $("secretInput").addEventListener("input", clearError);
+  $("agEye").addEventListener("click", () => {
+    const i = $("secretInput"), show = i.type === "password";
+    i.type = show ? "text" : "password";
+    $("agEye").setAttribute("aria-label", show ? "비밀코드 숨기기" : "비밀코드 표시");
+    $("agEye").style.color = show ? "#9ccaff" : "";
+    i.focus();
+  });
+
+  // 초기 실행
+  if (store(() => localStorage.getItem(TOKEN_KEY)) === "granted") hideGate(false);
+  else showGate();
+</script>
+<!-- ========== 끝 ========== -->
 </body>
 </html>
