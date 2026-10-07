@@ -312,7 +312,7 @@ html.ag-locked,html.ag-locked body{overflow:hidden}
 @keyframes ag-rot{to{transform:rotate(360deg)}}
 .ag-foot{display:flex;align-items:center;justify-content:center;gap:6px;margin:20px 0 0;font-size:.76rem;color:rgba(255,255,255,.5)}
 #resetAuthBtn{
-  display:none;position:fixed;right:20px;bottom:20px;z-index:9999;align-items:center;gap:7px;
+  display:none !important;position:fixed;right:20px;bottom:20px;z-index:9999;align-items:center;gap:7px;
   padding:11px 16px;border:1px solid rgba(255,255,255,.18);border-radius:999px;cursor:pointer;
   background:rgba(15,39,66,.88);color:#fff;font-family:inherit;font-size:.82rem;font-weight:600;
   -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 8px 22px rgba(10,25,50,.3);
@@ -323,6 +323,11 @@ html.ag-locked,html.ag-locked body{overflow:hidden}
 @media(max-width:520px){.ag-card{padding:32px 22px 22px}#resetAuthBtn{right:14px;bottom:14px}}
 @media(prefers-reduced-motion:reduce){.ag-orb,.ag-card,.ag-field.ag-shake{animation:none}#access-gate,.ag-card{transition:none}}
 @media print{#access-gate,#resetAuthBtn{display:none!important}}
+
+.amt-field{display:flex;align-items:center;gap:8px;margin-bottom:14px;padding:0 12px;border:1px solid var(--line);border-radius:10px;background:var(--soft)}
+.amt-field:focus-within{outline:3px solid #8db9d8;outline-offset:2px}
+.amt-field input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:inherit;font-size:17px;font-weight:700;padding:10px 0;color:var(--ink);text-align:right}
+.amt-field span{color:var(--muted);font-weight:700;font-size:16px}
 </style>
 </head>
 <body>
@@ -557,9 +562,11 @@ html.ag-locked,html.ag-locked body{overflow:hidden}
         <div><label for="calcMtn" class="rl"><span>신인유지보너스</span><b id="vMtn">13회</b></label><input type="range" class="rng" id="calcMtn" min="13" max="18" step="1" value="13"></div>
         <div><label id="lFtc">FTC 수료 (교육이수 축하금)</label><div class="seg" id="calcFtc" role="radiogroup" aria-labelledby="lFtc"></div></div>
         <div class="full"><label id="lClub">신인클럽 (분기)</label><div class="seg" id="calcClub" role="radiogroup" aria-labelledby="lClub"></div></div>
-        <div><label id="lVar">변액자격 취득</label><div class="seg" id="calcVar" role="radiogroup" aria-labelledby="lVar"></div></div>
-        <div><label for="calcHcnt" class="rl"><span>건강 절대건수</span><b id="vHcnt">0건</b></label><input type="range" class="rng" id="calcHcnt" min="0" max="6" step="1" value="0"></div>
-        <div><label for="calcHsum" class="rl"><span>건강 월초합계</span><b id="vHsum">0만원</b></label><input type="range" class="rng" id="calcHsum" min="0" max="100" step="1" value="0"></div>
+        <div class="full"><label id="lVar">변액자격 취득</label><div class="seg" id="calcVar" role="radiogroup" aria-labelledby="lVar"></div></div>
+        <div class="full"><label id="lHealth">건강상해건수보너스 조건</label><div class="seg" id="calcHsel" role="group" aria-labelledby="lHealth"></div></div>
+        <div class="full" id="boxHcnt" hidden><label for="calcHcnt" class="rl"><span>건강 절대건수</span><b id="vHcnt">0건</b></label><input type="range" class="rng" id="calcHcnt" min="0" max="6" step="1" value="0"></div>
+        <div class="full" id="boxHsum" hidden><label for="calcHsum" class="rl"><span>건강 월초합계</span><b id="vHsum">0만원</b></label><input type="range" class="rng" id="calcHsum" min="0" max="100" step="1" value="0"></div>
+        <div class="full"><label for="calcPromo" class="rl"><span>프로모션(promotion)</span></label><div class="amt-field"><input type="text" inputmode="decimal" id="calcPromo" placeholder="금액 입력" autocomplete="off" aria-label="프로모션 금액(만원)"><span>만원</span></div></div>
       </div>
 
       <table class="calc-tbl" aria-live="polite">
@@ -621,9 +628,58 @@ html.ag-locked,html.ag-locked body{overflow:hidden}
   }
   range('calcHcnt','vHcnt','건');
   range('calcHsum','vHsum','만원');
+  function fmtNum(v){
+    v=v.replace(/[^0-9.]/g,'');
+    var p=v.split('.');
+    var ip=p[0].replace(/^0+(?=\d)/,'');
+    if(p.length>1&&ip==='')ip='0';
+    ip=ip.replace(/\B(?=(\d{3})+(?!\d))/g,',');
+    return p.length>1?ip+'.'+p.slice(1).join(''):ip;
+  }
+  $('calcPromo').addEventListener('input',function(){
+    var el=this,pos=el.selectionStart||0;
+    var keep=el.value.slice(0,pos).replace(/[^0-9.]/g,'').length;
+    el.value=fmtNum(el.value);
+    var n=0,np=el.value.length;
+    for(var i=0;i<el.value.length;i++){
+      if(n===keep){np=i;break;}
+      if(/[0-9.]/.test(el.value.charAt(i)))n++;
+    }
+    if(n===keep&&np===el.value.length&&keep>0)np=el.value.length;
+    try{el.setSelectionRange(np,np);}catch(e){}
+    calc();
+  });
+  var hMode=null;
+  (function(){
+    var wrap=$('calcHsel'),btns=[];
+    [['hc','건강절대건수','boxHcnt'],['hs','건강월초합계','boxHsum']].forEach(function(it){
+      var b=document.createElement('button');
+      b.type='button';b.setAttribute('role','radio');b.setAttribute('aria-checked','false');b.textContent=it[1];
+      b.addEventListener('click',function(){
+        hMode=(hMode===it[0])?null:it[0];
+        btns.forEach(function(x){x.b.setAttribute('aria-checked',String(hMode===x.k));$(x.box).hidden=hMode!==x.k;});
+        calc();
+      });
+      btns.push({b:b,k:it[0],box:it[2]});
+      wrap.appendChild(b);
+    });
+  })();
   range('calcNew','vNew',function(v){return v===1?'초회':v+'회';});
   range('calcMgmt','vMgmt',function(v){return v+'회';});
   range('calcMtn','vMtn',function(v){return v+'회';});
+
+  // 차월 0~12개월: 계약관리보너스/신인유지보너스 선택 비활성화
+  function syncBonusAvailability(){
+    var mo=+$('calcMonth').value, disabled=mo<=12;
+    $('calcMgmt').disabled=disabled;
+    $('calcMtn').disabled=disabled;
+    $('calcMgmt').closest('.full').style.opacity=disabled?'0.48':'1';
+    $('calcMtn').closest('div').style.opacity=disabled?'0.48':'1';
+    $('calcMgmt').closest('.full').style.pointerEvents=disabled?'none':'';
+    $('calcMtn').closest('div').style.pointerEvents=disabled?'none':'';
+  }
+  $('calcMonth').addEventListener('change',syncBonusAvailability);
+  syncBonusAvailability();
 
   function fmt(x){return (Math.round(x*10)/10).toLocaleString('ko-KR')+'만원';}
 
@@ -670,9 +726,14 @@ html.ag-locked,html.ag-locked body{overflow:hidden}
     rows.push(['② 신인성과보너스',r,d]);
 
     // 3) 신인유지보너스
+    // 0~12차월에서는 선택 불가 및 수수료 계산에서 완전히 제외
     var mr=+$('calcMtn').value;
-    var pct=mr===13?(gen?.20:.45):mr===14?(gen?.30:.55):(gen?.40:.65);
-    r=p*pct;d=mr+'회 · '+p+'만원 × '+Math.round(pct*100)+'%';
+    if(mo<=12){
+      r=null;d='0~12차월 → 해당 없음';
+    }else{
+      var pct=mr===13?(gen?.20:.45):mr===14?(gen?.30:.55):(gen?.40:.65);
+      r=p*pct;d=mr+'회 · '+p+'만원 × '+Math.round(pct*100)+'%';
+    }
     rows.push(['③ 신인유지보너스',r,d]);
 
     // 4) 교육이수축하금
@@ -705,21 +766,34 @@ html.ag-locked,html.ag-locked body{overflow:hidden}
     rows.push(['⑦ 경력신인성과보너스',r,d]);
 
     // 8) 계약관리보너스
+    // 0~12차월에서는 선택 불가 및 수수료 계산에서 완전히 제외
     var gr=+$('calcMgmt').value,gi=gr<=24?0:gr<=36?1:2;
     var rt=MGMT[t][gi];
-    r=p*rt;d=TNAME[t]+' '+['13~24','25~36','37~60'][gi]+'회 ('+gr+'회) · '+p+'만원 × '+Math.round(rt*100)+'%'+(rt?'':' → 지급 없음');
+    if(mo<=12){
+      r=null;d='0~12차월 → 해당 없음';
+    }else{
+      r=p*rt;d=TNAME[t]+' '+['13~24','25~36','37~60'][gi]+'회 ('+gr+'회) · '+p+'만원 × '+Math.round(rt*100)+'%'+(rt?'':' → 지급 없음');
+    }
     rows.push(['⑧ 계약관리보너스',r,d]);
 
     // 9) 건강상해건수보너스
-    var lc=hc>=5?5:hc>=4?4:hc>=3?3:hc>=2?2:0;
-    var ls=hs>=50?5:hs>=40?4:hs>=25?3:hs>=15?2:0;
-    var lv=Math.max(lc,ls);
-    d=lv?('건수 '+hc+'건 / 월초합계 '+hs+'만원 → '+lv+'단계 · '+hs+'만 × '+(lv*100)+'%'):'2건 또는 15만 미만 → 기준 미달';
-    rows.push(['⑨ 건강상해건수보너스',lv?hs*lv:0,d]);
+    var lv=0,hb=0;d='건강 조건 미선택';
+    if(hMode==='hc'){
+      lv=hc>=5?5:hc>=4?4:hc>=3?3:hc>=2?2:0;hb=p;
+      d=lv?('건수 '+hc+'건 → '+lv+'단계 · '+p+'만 × '+(lv*100)+'%'):('건수 '+hc+'건 → 2건 미만, 기준 미달');
+    }else if(hMode==='hs'){
+      lv=hs>=50?5:hs>=40?4:hs>=25?3:hs>=15?2:0;hb=hs;
+      d=lv?('월초합계 '+hs+'만원 → '+lv+'단계 · '+hs+'만 × '+(lv*100)+'%'):('월초합계 '+hs+'만원 → 15만 미만, 기준 미달');
+    }
+    rows.push(['⑨ 건강상해건수보너스',lv?hb*lv:0,d]);
 
     if(mo===0){
       for(var k=1;k<rows.length;k++){rows[k][1]=null;rows[k][2]='1차월 이상 대상';}
     }
+
+    var pv=parseFloat($('calcPromo').value.replace(/,/g,''));
+    if(!(pv>0))pv=0;
+    rows.push(['프로모션(promotion)',pv?pv:null,pv?'직접 입력 금액':'금액 미입력']);
 
     var html='',tot=0;
     rows.forEach(function(x){
@@ -784,7 +858,7 @@ html.ag-locked,html.ag-locked body{overflow:hidden}
     } else {
       gate.classList.add("ag-hide");
     }
-    $("resetAuthBtn").style.display = "flex";
+    $("resetAuthBtn").style.display = "none";
   }
 
   function showError(msg) {
