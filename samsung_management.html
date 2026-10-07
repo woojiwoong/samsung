@@ -3,10 +3,10 @@
 <head>
 
 <!-- 애플 기기(아이폰/아이패드) 홈 화면 추가 시 적용되는 아이콘 -->
-   <link rel="apple-touch-icon" href="https://woojiwoong.github.io/samsung/IMG_7006.png">
+   <link rel="apple-touch-icon" href="https://woojiwoong.github.io/samsung/IMG_6749.png">
 
   <!-- 일반 브라우저 파비콘 (선택 사항) -->
-   <link rel="icon" type="image/png" href="https://woojiwoong.github.io/samsung/IMG_7006.png">
+   <link rel="icon" type="image/png" href="https://woojiwoong.github.io/samsung/IMG_6749.png">
 
 
 <meta charset="UTF-8">
@@ -187,6 +187,42 @@ th:last-child,td:last-child{border-right:0}
 .calc-result .total strong{font-size:24px;color:var(--red);letter-spacing:-.03em}
 .calc-note{font-size:11px;color:var(--muted);margin:10px 2px 0}
 @media print{.calc-btn,.calc-modal{display:none!important}}
+
+.calc-box{max-width:620px;max-height:92vh;display:flex;flex-direction:column}
+.calc-body{overflow-y:auto;-webkit-overflow-scrolling:touch}
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+.calc-grid label{margin-top:0}
+.calc-sub{font-size:12px;font-weight:800;color:var(--blue);margin:6px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.calc-tbl{width:100%;border-collapse:collapse;font-size:12.5px}
+.calc-tbl th{background:var(--navy);color:#fff;font-weight:700;padding:7px 8px;text-align:left}
+.calc-tbl th:last-child,.calc-tbl td:last-child{text-align:right;white-space:nowrap}
+.calc-tbl td{padding:7px 8px;border-bottom:1px solid #cfe3f1;vertical-align:top;background:#fff}
+.calc-tbl td small{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+.calc-tbl tr.off td{color:#8a97a3;background:var(--soft)}
+.calc-tbl td.amt{font-weight:800}
+@media(max-width:520px){.calc-grid{grid-template-columns:1fr}.calc-tbl{font-size:12px}}
+
+.calc-grid .full{grid-column:1/-1}
+.seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.seg button{
+  flex:1 1 0;min-width:0;min-height:42px;font:inherit;font-size:14px;font-weight:700;
+  padding:9px 8px;border:1px solid var(--line);border-radius:10px;
+  background:var(--soft);color:var(--ink);cursor:pointer
+}
+.seg button[aria-checked="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
+.seg button{white-space:nowrap}
+@media(max-width:520px){.seg button{font-size:13px;padding:9px 4px}}
+.seg button:focus-visible{outline:3px solid #8db9d8;outline-offset:2px}
+
+.calc-body label.rl{display:flex;justify-content:space-between;align-items:baseline}
+.calc-body label.rl b{color:var(--red);font-size:14px}
+.rng{-webkit-appearance:none;appearance:none;width:100%;height:44px;margin:0 0 14px;background:transparent;cursor:pointer;touch-action:pan-y}
+.rng::-webkit-slider-runnable-track{height:8px;border-radius:99px;background:linear-gradient(to right,var(--red) var(--p,0%),#f3c9cc var(--p,0%))}
+.rng::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:26px;height:26px;margin-top:-9px;border-radius:50%;background:var(--blue);border:3px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.35)}
+.rng::-moz-range-track{height:8px;border-radius:99px;background:#f3c9cc}
+.rng::-moz-range-progress{height:8px;border-radius:99px;background:var(--red)}
+.rng::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--blue);border:3px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.35)}
+.rng:focus-visible{outline:3px solid #f0b4b4;outline-offset:2px}
 </style>
 </head>
 <body>
@@ -204,7 +240,6 @@ th:last-child,td:last-child{border-right:0}
   <a href="#contract">Ⅱ. 신계약 수수료</a>
   <a href="#management">Ⅲ. 계약관리 보너스</a>
   <a href="#health">Ⅳ. 건강상해 건수 보너스</a>
-  <a href="#example">계산 예시</a>
   <button type="button" class="calc-btn" id="calcOpen">수수료계산</button>
 </nav>
 
@@ -353,31 +388,6 @@ th:last-child,td:last-child{border-right:0}
   </div>
 </section>
 
-<section class="card wide" id="example">
-  <div class="card-head">
-    <div class="num">예</div>
-    <h2>5차월 신인 종신보험 수수료 계산</h2>
-    <span class="note">월 보험료 30만원 기준</span>
-  </div>
-  <div class="section">
-    <div class="metrics">
-      <div class="metric"><b>5차월</b><span>신인 FC</span></div>
-      <div class="metric"><b>종신/GI</b><span>상품 유형</span></div>
-      <div class="metric"><b>30만원</b><span>월 보험료</span></div>
-    </div>
-    <table style="margin-top:12px">
-      <tr><th>항목</th><th>기준</th><th>계산</th><th>수수료</th></tr>
-      <tr><td>종신/GI 초회</td><td class="highlight">112%</td><td>30만원 × 112%</td><td class="highlight">33만 6천원</td></tr>
-    </table>
-    <div class="callout">
-      • 5차월 신인이 종신보험 월 30만원을 체결한 경우<br>
-      • 초회 수수료율 112% 적용<br>
-      • <strong>30만원 × 112% = 33만 6천원</strong>
-    </div>
-    <p class="subnote">※ 위 계산은 첨부된 26년 제도 정리의 종신/GI 지급률을 기준으로 표시한 것입니다.</p>
-  </div>
-</section>
-
 </main>
 
 <div class="footer">26년 제도 정리 · 영업관리자용 요약 페이지</div>
@@ -390,25 +400,34 @@ th:last-child,td:last-child{border-right:0}
       <button type="button" class="calc-close" id="calcClose" aria-label="닫기">&times;</button>
     </header>
     <div class="calc-body">
-      <label for="calcMonth">차월</label>
-      <select id="calcMonth"></select>
+      <div class="calc-sub">기본 조건</div>
+      <div class="calc-grid">
+        <div><label id="lKind">신인 구분</label><div class="seg" id="calcKind" role="radiogroup" aria-labelledby="lKind"></div></div>
+        <div><label for="calcMonth">차월</label><select id="calcMonth"></select></div>
+        <div class="full"><label id="lType">상품종류</label><div class="seg" id="calcType" role="radiogroup" aria-labelledby="lType"></div></div>
+        <div class="full"><label for="calcPrem">달성보험료(환산 성적)</label><select id="calcPrem"></select></div>
+      </div>
 
-      <label for="calcType">상품종류</label>
-      <select id="calcType">
-        <option value="whole">종신/GI</option>
-        <option value="health">건강상해</option>
-        <option value="fin">금융형</option>
-      </select>
+      <div class="calc-sub">항목별 조건</div>
+      <div class="calc-grid">
+        <div><label id="lEdu">교육/프로활동 (정착수수료)</label><div class="seg" id="calcEdu" role="radiogroup" aria-labelledby="lEdu"></div></div>
+        <div><label id="lStreak">3개월 연속 30만 미만</label><div class="seg" id="calcStreak" role="radiogroup" aria-labelledby="lStreak"></div></div>
+        <div><label for="calcMaint">유지 환산성적 (유지보너스)</label><select id="calcMaint"></select></div>
+        <div><label id="lFtc">FTC 수료 (교육이수 축하금)</label><div class="seg" id="calcFtc" role="radiogroup" aria-labelledby="lFtc"></div></div>
+        <div class="full"><label id="lClub">신인클럽 (분기)</label><div class="seg" id="calcClub" role="radiogroup" aria-labelledby="lClub"></div></div>
+        <div><label id="lVar">변액자격 취득</label><div class="seg" id="calcVar" role="radiogroup" aria-labelledby="lVar"></div></div>
+        <div><label for="calcHcnt" class="rl"><span>건강 절대건수</span><b id="vHcnt">0건</b></label><input type="range" class="rng" id="calcHcnt" min="0" max="6" step="1" value="0"></div>
+        <div><label for="calcHsum" class="rl"><span>건강 월초합계</span><b id="vHsum">0만원</b></label><input type="range" class="rng" id="calcHsum" min="0" max="100" step="1" value="0"></div>
+      </div>
 
-      <label for="calcPrem">달성보험료</label>
-      <select id="calcPrem"></select>
-
-      <div class="calc-result" aria-live="polite">
-        <div class="row"><span id="calcRateLbl">초회 수수료</span><b id="calcFirst">-</b></div>
-        <div class="row"><span>신인 성과 보너스</span><b id="calcBonus">-</b></div>
+      <table class="calc-tbl" aria-live="polite">
+        <thead><tr><th>항목</th><th>수수료</th></tr></thead>
+        <tbody id="calcRows"></tbody>
+      </table>
+      <div class="calc-result">
         <div class="total"><span>결과(수수료)</span><strong id="calcTotal">-</strong></div>
       </div>
-      <p class="calc-note">초회 수수료 = 달성보험료 × 상품별 초회 지급률, 신인 성과 보너스 = 차월 구간·환산 성적 기준(30만↑). 달성보험료를 환산 성적으로 가정한 값입니다.</p>
+      <p class="calc-note">달성보험료를 환산 성적·계약관리 기준금액으로 가정한 값이며, 신인 성과 보너스 100점 초과분은 초과 환산 × 150%로 계산했습니다.</p>
     </div>
   </div>
 </div>
@@ -416,31 +435,162 @@ th:last-child,td:last-child{border-right:0}
 <script>
 (function(){
   var RATE={whole:1.12,health:2.00,fin:1.02};
-  var TIERS=[[100,[190,210]],[70,[140,160]],[50,[100,135]],[40,[50,100]],[30,[40,90]]];
+  var TNAME={whole:'종신/GI',health:'건강상해',fin:'금융형'};
+  var PERF=[[100,190,210],[70,140,160],[50,100,135],[40,50,100],[30,40,90]];
+  var MGMT={whole:[.14,.11,0],health:[.04,.03,0],fin:[.11,.08,.03]};
   var $=function(id){return document.getElementById(id)};
-  var modal=$('calcModal'),mo=$('calcMonth'),pr=$('calcPrem'),ty=$('calcType');
 
-  for(var m=1;m<=24;m++){var o=document.createElement('option');o.value=m;o.textContent=m+'차월';mo.appendChild(o);}
-  [10,15,20,30,40,50,70,100].forEach(function(v){var o=document.createElement('option');o.value=v;o.textContent=v+'만원';pr.appendChild(o);});
-  mo.value=5;pr.value=30;
-
-  function fmt(man){
-    var n=Math.round(man*10)/10;
-    var s=String(n);
-    return s+'만원';
+  function fill(id,list,def){
+    var el=$(id);
+    list.forEach(function(it){var o=document.createElement('option');o.value=it[0];o.textContent=it[1];el.appendChild(o);});
+    if(def!==undefined)el.value=def;
+    el.addEventListener('change',calc);
   }
+  function seg(id,list,def){
+    var el=$(id),val=def,btns=[];
+    function paint(){btns.forEach(function(b){b.setAttribute('aria-checked',String(b.dataset.v===String(val)));});}
+    list.forEach(function(it){
+      var b=document.createElement('button');
+      b.type='button';b.setAttribute('role','radio');b.dataset.v=String(it[0]);b.textContent=it[1];
+      b.addEventListener('click',function(){val=it[0];paint();calc();});
+      el.appendChild(b);btns.push(b);
+    });
+    Object.defineProperty(el,'value',{get:function(){return String(val);}});
+    paint();
+  }
+  var months=[];for(var m=0;m<=24;m++)months.push([m,m+'차월']);
+  var prem=[10,15,20,30,40,50,60,70,80,90,100,120,150,200].map(function(v){return [v,v+'만원']});
+
+  fill('calcMonth',months,5);
+  seg('calcKind',[['gen','일반'],['exp','경력']],'gen');
+  seg('calcType',[['whole','종신/GI'],['health','건강상해'],['fin','금융형']],'whole');
+  fill('calcPrem',prem,30);
+  seg('calcEdu',[['y','달성'],['n','미달성']],'y');
+  seg('calcStreak',[['n','아니오'],['y','예']],'n');
+  fill('calcMaint',prem,30);
+  seg('calcFtc',[['y','수료'],['n','미수료']],'y');
+  seg('calcClub',[['0','해당 없음'],['50','50만클럽↑'],['100','100만클럽↑']],'0');
+  seg('calcVar',[['n','미취득'],['y','취득']],'n');
+
+  function range(id,vid,unit){
+    var el=$(id),out=$(vid);
+    function upd(){out.textContent=el.value+unit;el.style.setProperty('--p',((el.value-el.min)/(el.max-el.min)*100)+'%');}
+    el.addEventListener('input',function(){upd();calc();});
+    upd();
+  }
+  range('calcHcnt','vHcnt','건');
+  range('calcHsum','vHsum','만원');
+
+  function fmt(x){return (Math.round(x*10)/10).toLocaleString('ko-KR')+'만원';}
+
   function calc(){
-    var m=+mo.value,p=+pr.value,t=ty.value;
-    var first=p*RATE[t];
-    var bonus=0,idx=m<=11?0:1;
-    for(var i=0;i<TIERS.length;i++){if(p>=TIERS[i][0]){bonus=TIERS[i][1][idx];break;}}
-    $('calcRateLbl').textContent='초회 수수료 ('+Math.round(RATE[t]*100)+'%)';
-    $('calcFirst').textContent=fmt(first);
-    $('calcBonus').textContent=bonus?fmt(bonus):'해당 없음';
-    $('calcTotal').textContent=fmt(first+bonus);
+    var mo=+$('calcMonth').value,gen=$('calcKind').value==='gen',t=$('calcType').value;
+    var p=+$('calcPrem').value,edu=$('calcEdu').value==='y',streak=$('calcStreak').value==='y';
+    var mt=+$('calcMaint').value,ftc=$('calcFtc').value==='y',club=+$('calcClub').value;
+    var vr=$('calcVar').value==='y',hc=+$('calcHcnt').value,hs=+$('calcHsum').value;
+    var rows=[],r;
+
+    // FC교육비 (0차월)
+    r=null;d='0차월 일반 신인 대상 (교육 수료 · 등록 익일 지급)';
+    if(mo===0&&gen){r=80;d='0차월 교육 수료 · 인당 80만원';}
+    rows.push(['FC교육비',r,d]);
+
+    // 0) 신계약 수수료(초회)
+    rows.push(['신계약 수수료(초회)',p*RATE[t],p+'만원 × '+Math.round(RATE[t]*100)+'% ('+TNAME[t]+')']);
+
+    // 1) 정착수수료
+    r=null;var d='일반 신인 1~11차월 대상';
+    if(gen&&mo<=11){
+      if(streak){r=0;d='3개월 연속 환산 30만 미만 → 무지급';}
+      else if(edu){
+        r=p>=70?230:p>=50?210:p>=30?150:p>=15?100:0;
+        d='교육/프로활동 달성 · 환산 '+p+'만원';
+      }else{
+        r=p>=15?50:0;d='교육/프로활동 미달성 · 환산 '+p+'만원';
+      }
+      if(r===0&&!streak)d+=' → 기준 미달';
+    }
+    rows.push(['① 정착수수료',r,d]);
+
+    // 2) 신인성과보너스
+    r=null;d='일반 신인 대상';
+    if(gen){
+      var idx=mo<=11?1:2,base=0;
+      for(var i=0;i<PERF.length;i++){if(p>=PERF[i][0]){base=PERF[i][idx];break;}}
+      r=base;d=(mo<=11?'1~11':'12~24')+'차월 · 환산 '+p+'만원';
+      if(p>100){var ex=(p-100)*1.5;r+=ex;d+=' · 100점 초과 '+(p-100)+'만 × 150% = '+fmt(ex);}
+      else if(!base)d+=' → 30만 미만';
+    }
+    rows.push(['② 신인성과보너스',r,d]);
+
+    // 3) 신인유지보너스
+    r=null;d='13~18차월 대상';
+    if(mo>=13&&mo<=18){
+      var pct=mo===13?(gen?.20:.45):mo===14?(gen?.30:.55):(gen?.40:.65);
+      r=mt*pct;d='유지 환산 '+mt+'만원 × '+Math.round(pct*100)+'%';
+    }
+    rows.push(['③ 신인유지보너스',r,d]);
+
+    // 4) 교육이수축하금
+    r=null;d='12~14차월 대상';
+    if(mo>=12&&mo<=14){
+      var amt=mo===12?70:mo===13?55:30,ft=mo-10;
+      d=mo+'차월 · FTC '+ft+' ';
+      if(ftc){r=amt;d+='수료';}else{r=0;d+='미수료';}
+    }
+    rows.push(['④ 교육이수축하금',r,d]);
+
+    // 5) 신인클럽축하금
+    r=null;d='일반 신인 12~24차월 대상';
+    if(gen&&mo>=12){
+      r=club;d=club?club+'만클럽 ↑ 분기지급액':'클럽 미해당';
+    }
+    rows.push(['⑤ 신인클럽축하금',r,d]);
+
+    // 6) 변액자격취득지원금
+    r=null;d='13차월 대상';
+    if(mo===13){r=vr?10:0;d=vr?'13월 자격 취득':'자격 미취득';}
+    rows.push(['⑥ 변액자격취득지원금',r,d]);
+
+    // 7) 경력신인성과보너스
+    r=null;d='경력 신인 1~11차월 대상';
+    if(!gen&&mo<=11){
+      if(p>=30){r=p*3.3;d='환산 '+p+'만원 × 330%';}
+      else{r=0;d='환산 30만 미만';}
+    }
+    rows.push(['⑦ 경력신인성과보너스',r,d]);
+
+    // 8) 계약관리보너스
+    r=null;d='13차월 이상 대상';
+    if(mo>=13){
+      var rt=MGMT[t][0];
+      r=rt?p*rt:0;d=TNAME[t]+' 13~24회 · '+p+'만원 × '+Math.round(rt*100)+'%';
+    }
+    rows.push(['⑧ 계약관리보너스',r,d]);
+
+    // 9) 건강상해건수보너스
+    var lc=hc>=5?5:hc>=4?4:hc>=3?3:hc>=2?2:0;
+    var ls=hs>=50?5:hs>=40?4:hs>=25?3:hs>=15?2:0;
+    var lv=Math.max(lc,ls);
+    d=lv?('건수 '+hc+'건 / 월초합계 '+hs+'만원 → '+lv+'단계 · '+hs+'만 × '+(lv*100)+'%'):'2건 또는 15만 미만 → 기준 미달';
+    rows.push(['⑨ 건강상해건수보너스',lv?hs*lv:0,d]);
+
+    if(mo===0){
+      for(var k=1;k<rows.length;k++){rows[k][1]=null;rows[k][2]='1차월 이상 대상';}
+    }
+
+    var html='',tot=0;
+    rows.forEach(function(x){
+      var on=x[1]!==null;
+      if(on)tot+=x[1];
+      html+='<tr class="'+(on?'':'off')+'"><td>'+x[0]+'<small>'+x[2]+'</small></td><td class="amt">'+(on?fmt(x[1]):'해당 없음')+'</td></tr>';
+    });
+    $('calcRows').innerHTML=html;
+    $('calcTotal').textContent=fmt(tot);
   }
-  [mo,pr,ty].forEach(function(e){e.addEventListener('change',calc)});
-  function open(){modal.classList.add('open');calc();mo.focus();}
+
+  var modal=$('calcModal');
+  function open(){modal.classList.add('open');calc();$('calcKind').focus();}
   function close(){modal.classList.remove('open');$('calcOpen').focus();}
   $('calcOpen').addEventListener('click',open);
   $('calcClose').addEventListener('click',close);
