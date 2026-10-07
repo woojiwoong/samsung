@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+
+<!-- 애플 기기(아이폰/아이패드) 홈 화면 추가 시 적용되는 아이콘 -->
+   <link rel="apple-touch-icon" href="https://woojiwoong.github.io/samsung/IMG_7006.png">
+
+  <!-- 일반 브라우저 파비콘 (선택 사항) -->
+   <link rel="icon" type="image/png" href="https://woojiwoong.github.io/samsung/IMG_7006.png">
+
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0f2742">
@@ -136,6 +144,49 @@ th:last-child,td:last-child{border-right:0}
   .nav{display:none}
   .card{box-shadow:none;break-inside:avoid}
 }
+
+.calc-btn{
+  flex:0 0 auto;border:0;cursor:pointer;
+  background:var(--blue);color:#fff;font:inherit;font-size:13px;font-weight:700;
+  padding:10px 13px;border-radius:12px;box-shadow:0 4px 12px rgba(23,105,170,.25)
+}
+@media(max-width:520px){.calc-btn{font-size:12px;padding:9px 10px}}
+.calc-btn:hover{background:var(--blue2)}
+.calc-btn:focus-visible,.calc-modal select:focus-visible,.calc-close:focus-visible{outline:3px solid #8db9d8;outline-offset:2px}
+.calc-modal{
+  position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;
+  padding:16px;background:rgba(15,39,66,.55)
+}
+.calc-modal.open{display:flex}
+.calc-box{
+  width:100%;max-width:420px;background:#fff;border-radius:20px;overflow:hidden;
+  box-shadow:0 24px 60px rgba(15,39,66,.35)
+}
+.calc-box header{
+  display:flex;align-items:center;padding:16px 18px;background:var(--navy);color:#fff
+}
+.calc-box header h3{margin:0;font-size:17px;letter-spacing:-.03em}
+.calc-close{
+  margin-left:auto;border:0;background:transparent;color:#fff;font-size:24px;line-height:1;cursor:pointer;padding:2px 6px
+}
+.calc-body{padding:18px}
+.calc-body label{display:block;font-size:13px;font-weight:800;color:#32414e;margin:0 0 6px}
+.calc-body select{
+  width:100%;font:inherit;font-size:15px;padding:11px 12px;margin-bottom:14px;
+  border:1px solid var(--line);border-radius:10px;background:var(--soft);color:var(--ink)
+}
+.calc-result{
+  margin-top:4px;padding:14px;border-radius:14px;background:var(--sky);border:1px solid #cfe3f1
+}
+.calc-result .row{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);padding:3px 0}
+.calc-result .row b{color:var(--ink)}
+.calc-result .total{
+  display:flex;justify-content:space-between;align-items:baseline;
+  margin-top:8px;padding-top:10px;border-top:1px solid #cfe3f1;font-weight:800
+}
+.calc-result .total strong{font-size:24px;color:var(--red);letter-spacing:-.03em}
+.calc-note{font-size:11px;color:var(--muted);margin:10px 2px 0}
+@media print{.calc-btn,.calc-modal{display:none!important}}
 </style>
 </head>
 <body>
@@ -153,6 +204,8 @@ th:last-child,td:last-child{border-right:0}
   <a href="#contract">Ⅱ. 신계약 수수료</a>
   <a href="#management">Ⅲ. 계약관리 보너스</a>
   <a href="#health">Ⅳ. 건강상해 건수 보너스</a>
+  <a href="#example">계산 예시</a>
+  <button type="button" class="calc-btn" id="calcOpen">수수료계산</button>
 </nav>
 
 <main class="grid">
@@ -300,9 +353,100 @@ th:last-child,td:last-child{border-right:0}
   </div>
 </section>
 
+<section class="card wide" id="example">
+  <div class="card-head">
+    <div class="num">예</div>
+    <h2>5차월 신인 종신보험 수수료 계산</h2>
+    <span class="note">월 보험료 30만원 기준</span>
+  </div>
+  <div class="section">
+    <div class="metrics">
+      <div class="metric"><b>5차월</b><span>신인 FC</span></div>
+      <div class="metric"><b>종신/GI</b><span>상품 유형</span></div>
+      <div class="metric"><b>30만원</b><span>월 보험료</span></div>
+    </div>
+    <table style="margin-top:12px">
+      <tr><th>항목</th><th>기준</th><th>계산</th><th>수수료</th></tr>
+      <tr><td>종신/GI 초회</td><td class="highlight">112%</td><td>30만원 × 112%</td><td class="highlight">33만 6천원</td></tr>
+    </table>
+    <div class="callout">
+      • 5차월 신인이 종신보험 월 30만원을 체결한 경우<br>
+      • 초회 수수료율 112% 적용<br>
+      • <strong>30만원 × 112% = 33만 6천원</strong>
+    </div>
+    <p class="subnote">※ 위 계산은 첨부된 26년 제도 정리의 종신/GI 지급률을 기준으로 표시한 것입니다.</p>
+  </div>
+</section>
+
 </main>
 
 <div class="footer">26년 제도 정리 · 영업관리자용 요약 페이지</div>
 </div>
+
+<div class="calc-modal" id="calcModal" role="dialog" aria-modal="true" aria-labelledby="calcTitle">
+  <div class="calc-box">
+    <header>
+      <h3 id="calcTitle">수수료 계산</h3>
+      <button type="button" class="calc-close" id="calcClose" aria-label="닫기">&times;</button>
+    </header>
+    <div class="calc-body">
+      <label for="calcMonth">차월</label>
+      <select id="calcMonth"></select>
+
+      <label for="calcType">상품종류</label>
+      <select id="calcType">
+        <option value="whole">종신/GI</option>
+        <option value="health">건강상해</option>
+        <option value="fin">금융형</option>
+      </select>
+
+      <label for="calcPrem">달성보험료</label>
+      <select id="calcPrem"></select>
+
+      <div class="calc-result" aria-live="polite">
+        <div class="row"><span id="calcRateLbl">초회 수수료</span><b id="calcFirst">-</b></div>
+        <div class="row"><span>신인 성과 보너스</span><b id="calcBonus">-</b></div>
+        <div class="total"><span>결과(수수료)</span><strong id="calcTotal">-</strong></div>
+      </div>
+      <p class="calc-note">초회 수수료 = 달성보험료 × 상품별 초회 지급률, 신인 성과 보너스 = 차월 구간·환산 성적 기준(30만↑). 달성보험료를 환산 성적으로 가정한 값입니다.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var RATE={whole:1.12,health:2.00,fin:1.02};
+  var TIERS=[[100,[190,210]],[70,[140,160]],[50,[100,135]],[40,[50,100]],[30,[40,90]]];
+  var $=function(id){return document.getElementById(id)};
+  var modal=$('calcModal'),mo=$('calcMonth'),pr=$('calcPrem'),ty=$('calcType');
+
+  for(var m=1;m<=24;m++){var o=document.createElement('option');o.value=m;o.textContent=m+'차월';mo.appendChild(o);}
+  [10,15,20,30,40,50,70,100].forEach(function(v){var o=document.createElement('option');o.value=v;o.textContent=v+'만원';pr.appendChild(o);});
+  mo.value=5;pr.value=30;
+
+  function fmt(man){
+    var n=Math.round(man*10)/10;
+    var s=String(n);
+    return s+'만원';
+  }
+  function calc(){
+    var m=+mo.value,p=+pr.value,t=ty.value;
+    var first=p*RATE[t];
+    var bonus=0,idx=m<=11?0:1;
+    for(var i=0;i<TIERS.length;i++){if(p>=TIERS[i][0]){bonus=TIERS[i][1][idx];break;}}
+    $('calcRateLbl').textContent='초회 수수료 ('+Math.round(RATE[t]*100)+'%)';
+    $('calcFirst').textContent=fmt(first);
+    $('calcBonus').textContent=bonus?fmt(bonus):'해당 없음';
+    $('calcTotal').textContent=fmt(first+bonus);
+  }
+  [mo,pr,ty].forEach(function(e){e.addEventListener('change',calc)});
+  function open(){modal.classList.add('open');calc();mo.focus();}
+  function close(){modal.classList.remove('open');$('calcOpen').focus();}
+  $('calcOpen').addEventListener('click',open);
+  $('calcClose').addEventListener('click',close);
+  modal.addEventListener('click',function(e){if(e.target===modal)close();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&modal.classList.contains('open'))close();});
+})();
+</script>
 </body>
 </html>
