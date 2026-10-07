@@ -545,6 +545,8 @@ html.ag-locked,html.ag-locked body{overflow:hidden}
         <div><label id="lKind">신인 구분</label><div class="seg" id="calcKind" role="radiogroup" aria-labelledby="lKind"></div></div>
         <div><label for="calcMonth">차월</label><select id="calcMonth"></select></div>
         <div class="full"><label id="lType">상품종류</label><div class="seg" id="calcType" role="radiogroup" aria-labelledby="lType"></div></div>
+        <div class="full"><label for="calcNew" class="rl"><span>신계약수수료</span><b id="vNew">초회</b></label><input type="range" class="rng" id="calcNew" min="1" max="15" step="1" value="1"></div>
+        <div class="full"><label for="calcMgmt" class="rl"><span>계약관리보너스</span><b id="vMgmt">13회</b></label><input type="range" class="rng" id="calcMgmt" min="13" max="60" step="1" value="13"></div>
         <div class="full"><label for="calcPrem">달성보험료(환산 성적)</label><select id="calcPrem"></select></div>
       </div>
 
@@ -552,7 +554,7 @@ html.ag-locked,html.ag-locked body{overflow:hidden}
       <div class="calc-grid">
         <div><label id="lEdu">교육/프로활동 (정착수수료)</label><div class="seg" id="calcEdu" role="radiogroup" aria-labelledby="lEdu"></div></div>
         <div><label id="lStreak">3개월 연속 30만 미만</label><div class="seg" id="calcStreak" role="radiogroup" aria-labelledby="lStreak"></div></div>
-        <div><label for="calcMaint">유지 환산성적 (유지보너스)</label><select id="calcMaint"></select></div>
+        <div><label for="calcMtn" class="rl"><span>신인유지보너스</span><b id="vMtn">13회</b></label><input type="range" class="rng" id="calcMtn" min="13" max="18" step="1" value="13"></div>
         <div><label id="lFtc">FTC 수료 (교육이수 축하금)</label><div class="seg" id="calcFtc" role="radiogroup" aria-labelledby="lFtc"></div></div>
         <div class="full"><label id="lClub">신인클럽 (분기)</label><div class="seg" id="calcClub" role="radiogroup" aria-labelledby="lClub"></div></div>
         <div><label id="lVar">변액자격 취득</label><div class="seg" id="calcVar" role="radiogroup" aria-labelledby="lVar"></div></div>
@@ -574,7 +576,7 @@ html.ag-locked,html.ag-locked body{overflow:hidden}
 
 <script>
 (function(){
-  var RATE={whole:1.12,health:2.00,fin:1.02};
+  var NEWR={whole:[1.12,.08,.20,.12],health:[2.00,0,.20,.12],fin:[1.02,.08,.20,.12]};
   var TNAME={whole:'종신/GI',health:'건강상해',fin:'금융형'};
   var PERF=[[100,190,210],[70,140,160],[50,100,135],[40,50,100],[30,40,90]];
   var MGMT={whole:[.14,.11,0],health:[.04,.03,0],fin:[.11,.08,.03]};
@@ -607,26 +609,28 @@ html.ag-locked,html.ag-locked body{overflow:hidden}
   fill('calcPrem',prem,30);
   seg('calcEdu',[['y','달성'],['n','미달성']],'y');
   seg('calcStreak',[['n','아니오'],['y','예']],'n');
-  fill('calcMaint',prem,30);
   seg('calcFtc',[['y','수료'],['n','미수료']],'y');
   seg('calcClub',[['0','해당 없음'],['50','50만클럽↑'],['100','100만클럽↑']],'0');
   seg('calcVar',[['n','미취득'],['y','취득']],'n');
 
   function range(id,vid,unit){
     var el=$(id),out=$(vid);
-    function upd(){out.textContent=el.value+unit;el.style.setProperty('--p',((el.value-el.min)/(el.max-el.min)*100)+'%');}
+    function upd(){out.textContent=(typeof unit==='function')?unit(+el.value):el.value+unit;el.style.setProperty('--p',((el.value-el.min)/(el.max-el.min)*100)+'%');}
     el.addEventListener('input',function(){upd();calc();});
     upd();
   }
   range('calcHcnt','vHcnt','건');
   range('calcHsum','vHsum','만원');
+  range('calcNew','vNew',function(v){return v===1?'초회':v+'회';});
+  range('calcMgmt','vMgmt',function(v){return v+'회';});
+  range('calcMtn','vMtn',function(v){return v+'회';});
 
   function fmt(x){return (Math.round(x*10)/10).toLocaleString('ko-KR')+'만원';}
 
   function calc(){
     var mo=+$('calcMonth').value,gen=$('calcKind').value==='gen',t=$('calcType').value;
     var p=+$('calcPrem').value,edu=$('calcEdu').value==='y',streak=$('calcStreak').value==='y';
-    var mt=+$('calcMaint').value,ftc=$('calcFtc').value==='y',club=+$('calcClub').value;
+    var ftc=$('calcFtc').value==='y',club=+$('calcClub').value;
     var vr=$('calcVar').value==='y',hc=+$('calcHcnt').value,hs=+$('calcHsum').value;
     var rows=[],r;
 
@@ -636,7 +640,9 @@ html.ag-locked,html.ag-locked body{overflow:hidden}
     rows.push(['FC교육비',r,d]);
 
     // 0) 신계약 수수료(초회)
-    rows.push(['신계약 수수료(초회)',p*RATE[t],p+'만원 × '+Math.round(RATE[t]*100)+'% ('+TNAME[t]+')']);
+    var nn=+$('calcNew').value,ni=nn===1?0:nn<=12?1:nn<=14?2:3;
+    var nrt=NEWR[t][ni];
+    rows.push(['신계약 수수료',p*nrt,(nn===1?'초회':nn+'회')+' · '+p+'만원 × '+Math.round(nrt*100)+'% ('+TNAME[t]+')'+(nrt?'':' → 지급 없음')]);
 
     // 1) 정착수수료
     r=null;var d='일반 신인 1~11차월 대상';
@@ -664,11 +670,9 @@ html.ag-locked,html.ag-locked body{overflow:hidden}
     rows.push(['② 신인성과보너스',r,d]);
 
     // 3) 신인유지보너스
-    r=null;d='13~18차월 대상';
-    if(mo>=13&&mo<=18){
-      var pct=mo===13?(gen?.20:.45):mo===14?(gen?.30:.55):(gen?.40:.65);
-      r=mt*pct;d='유지 환산 '+mt+'만원 × '+Math.round(pct*100)+'%';
-    }
+    var mr=+$('calcMtn').value;
+    var pct=mr===13?(gen?.20:.45):mr===14?(gen?.30:.55):(gen?.40:.65);
+    r=p*pct;d=mr+'회 · '+p+'만원 × '+Math.round(pct*100)+'%';
     rows.push(['③ 신인유지보너스',r,d]);
 
     // 4) 교육이수축하금
@@ -701,11 +705,9 @@ html.ag-locked,html.ag-locked body{overflow:hidden}
     rows.push(['⑦ 경력신인성과보너스',r,d]);
 
     // 8) 계약관리보너스
-    r=null;d='13차월 이상 대상';
-    if(mo>=13){
-      var rt=MGMT[t][0];
-      r=rt?p*rt:0;d=TNAME[t]+' 13~24회 · '+p+'만원 × '+Math.round(rt*100)+'%';
-    }
+    var gr=+$('calcMgmt').value,gi=gr<=24?0:gr<=36?1:2;
+    var rt=MGMT[t][gi];
+    r=p*rt;d=TNAME[t]+' '+['13~24','25~36','37~60'][gi]+'회 ('+gr+'회) · '+p+'만원 × '+Math.round(rt*100)+'%'+(rt?'':' → 지급 없음');
     rows.push(['⑧ 계약관리보너스',r,d]);
 
     // 9) 건강상해건수보너스
