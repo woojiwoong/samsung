@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f2742">
+<title>26년 제도 정리 | 영업관리자를 위한 안내</title>
+<style>
+:root{
+  --navy:#0f2742;
+  --blue:#1769aa;
+  --blue2:#2b84c6;
+  --sky:#eaf4fb;
+  --ink:#17202a;
+  --muted:#687482;
+  --line:#d8e1e8;
+  --soft:#f6f8fa;
+  --green:#177b63;
+  --red:#d83b45;
+  --gold:#b8892d;
+  --shadow:0 14px 36px rgba(15,39,66,.10);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Noto Sans KR","Malgun Gothic",sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 10% 0%,#edf6ff 0,transparent 28%),
+    linear-gradient(180deg,#f8fafc 0%,#eef3f7 100%);
+  line-height:1.45;
+}
+.container{max-width:1280px;margin:0 auto;padding:26px 20px 54px}
+.hero{
+  position:relative; overflow:hidden;
+  background:linear-gradient(135deg,#0b223b 0%,#143b60 58%,#1c608e 100%);
+  color:#fff; border-radius:24px; padding:34px 38px 30px;
+  box-shadow:0 20px 50px rgba(15,39,66,.22);
+}
+.hero:after{
+  content:""; position:absolute; width:340px;height:340px;border-radius:50%;
+  right:-100px;top:-170px;
+  background:rgba(255,255,255,.08);
+}
+.eyebrow{font-size:15px;font-weight:700;letter-spacing:.08em;opacity:.88}
+.hero h1{margin:7px 0 8px;font-size:clamp(36px,5vw,64px);letter-spacing:-.055em;line-height:1.02}
+.hero p{margin:0;color:#d9e8f4;font-size:15px}
+.badge{
+  display:inline-flex;align-items:center;gap:8px;
+  margin-top:22px;padding:9px 14px;border-radius:999px;
+  background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.2);
+  font-size:14px;font-weight:700
+}
+.badge i{width:8px;height:8px;border-radius:50%;background:#71d7ff;display:inline-block}
+.nav{
+  display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 22px;
+}
+.nav a{
+  text-decoration:none;color:var(--navy);background:#fff;border:1px solid var(--line);
+  border-radius:12px;padding:9px 13px;font-size:13px;font-weight:700;
+  box-shadow:0 4px 12px rgba(15,39,66,.04)
+}
+.nav a:hover{border-color:#8db9d8;background:var(--sky)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+.card{
+  background:rgba(255,255,255,.94);border:1px solid rgba(216,225,232,.9);
+  border-radius:20px;box-shadow:var(--shadow);overflow:hidden;
+}
+.card.wide{grid-column:1/-1}
+.card-head{
+  display:flex;align-items:center;gap:12px;padding:18px 20px 15px;
+  border-bottom:1px solid var(--line);background:linear-gradient(180deg,#fff,#f8fafc);
+}
+.num{
+  flex:0 0 auto;width:36px;height:36px;border-radius:11px;
+  display:grid;place-items:center;background:var(--navy);color:#fff;
+  font-size:14px;font-weight:800;
+}
+.card-head h2{margin:0;font-size:20px;letter-spacing:-.035em}
+.card-head .note{margin-left:auto;color:var(--muted);font-size:12px}
+.section{padding:17px 20px}
+.section + .section{border-top:1px solid #edf1f4}
+.section-title{
+  display:flex;align-items:center;gap:9px;margin:0 0 10px;
+  font-size:16px;font-weight:800;letter-spacing:-.025em
+}
+.section-title .dot{width:7px;height:7px;border-radius:50%;background:var(--blue)}
+.section-title .red{color:var(--red)}
+table{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border:1px solid var(--line);border-radius:11px;font-size:13px}
+th,td{padding:8px 7px;text-align:center;border-right:1px solid var(--line);border-bottom:1px solid var(--line);vertical-align:middle}
+th{background:#f0f5f8;font-weight:800;color:#32414e}
+tr:last-child td{border-bottom:0}
+th:last-child,td:last-child{border-right:0}
+.highlight{color:var(--red);font-weight:900}
+.blue{color:var(--blue);font-weight:800}
+.green{color:var(--green);font-weight:800}
+.gold{color:#9a6d12;font-weight:800}
+.subnote{font-size:11px;color:var(--muted);margin:8px 2px 0}
+.callout{
+  margin-top:10px;padding:10px 12px;border-radius:10px;
+  background:#fff8ea;border:1px solid #f1dfb5;color:#795817;font-size:12px
+}
+.callout.red{background:#fff2f3;border-color:#f2c7cb;color:#a02c35}
+.metrics{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px
+}
+.metric{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:11px;text-align:center}
+.metric b{display:block;font-size:18px;color:var(--navy)}
+.metric span{font-size:11px;color:var(--muted)}
+.footer{
+  margin-top:22px;text-align:center;color:#7a8793;font-size:11px
+}
+@media(max-width:820px){
+  .container{padding:14px 12px 34px}
+  .hero{padding:25px 22px;border-radius:19px}
+  .hero h1{font-size:42px}
+  .grid{grid-template-columns:1fr}
+  .card.wide{grid-column:auto}
+  .card-head .note{display:none}
+}
+@media(max-width:520px){
+  .hero h1{font-size:35px}
+  .nav{gap:6px}
+  .nav a{font-size:12px;padding:8px 10px}
+  .card-head{padding:15px}
+  .section{padding:14px 13px}
+  table{font-size:11px}
+  th,td{padding:7px 4px}
+  .metrics{grid-template-columns:1fr 1fr}
+}
+@media print{
+  body{background:#fff}
+  .container{max-width:none;padding:0}
+  .hero{box-shadow:none;border-radius:0}
+  .nav{display:none}
+  .card{box-shadow:none;break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header class="hero">
+  <div class="eyebrow">영업관리자를 위한</div>
+  <h1>26년 제도 정리</h1>
+  <p>신인·경력 FC 수수료 및 계약관리 보너스 핵심 정리</p>
+  <div class="badge"><i></i> FC 수수료 · ① 신인 &nbsp; | &nbsp; ※ 24차월 ↓ FC</div>
+</header>
+
+<nav class="nav" aria-label="빠른 이동">
+  <a href="#new">Ⅰ. 신인 수수료</a>
+  <a href="#contract">Ⅱ. 신계약 수수료</a>
+  <a href="#management">Ⅲ. 계약관리 보너스</a>
+  <a href="#health">Ⅳ. 건강상해 건수 보너스</a>
+</nav>
+
+<main class="grid">
+
+<section class="card" id="new">
+  <div class="card-head">
+    <div class="num">Ⅰ</div>
+    <h2>신인 수수료</h2>
+    <span class="note">일반 신인 FC</span>
+  </div>
+
+  <div class="section">
+    <h3 class="section-title"><span class="dot"></span>① FC 교육비</h3>
+    <p class="subnote">0차월 교육 수료 &amp; 등록 익일 지급 (일반)</p>
+    <table>
+      <tr><th>구분</th><th>지급 금액</th></tr>
+      <tr><td>인당</td><td class="highlight">80만</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h3 class="section-title"><span class="dot"></span>② 정착 수수료 <small>(일반)</small></h3>
+    <p class="subnote">모집활동 수수료 : 초회 70% &amp; 5회차 6~7회</p>
+    <table>
+      <tr><th>환산 성적</th><th>교육/프로활동</th><th>70만↑</th><th>50만↑</th><th>30만↑</th></tr>
+      <tr><td>1~11차월</td><td class="highlight">달성</td><td>230만</td><td>210</td><td>150</td></tr>
+      <tr><td></td><td>미달성</td><td></td><td>50</td><td></td></tr>
+    </table>
+    <div class="callout red">• 환산 15만↑ / 월 100만 지급 (교육활동 횟수는 월 50만 지급)<br>• 3개월 연속 환산 30만↑ 미만 시 해당월 무지급</div>
+  </div>
+
+  <div class="section">
+    <h3 class="section-title"><span class="dot"></span>③ 신인 성과 보너스 <small>(일반)</small></h3>
+    <table>
+      <tr><th>환산 성적</th><th>100만 ↑</th><th>70만 ↑</th><th>50만 ↑</th><th>40만 ↑</th><th>30만 ↑</th></tr>
+      <tr><td>1~11차월</td><td class="highlight">190만</td><td>140</td><td>100</td><td>50</td><td>40</td></tr>
+      <tr><td>12~24차월</td><td>210</td><td>160</td><td>135</td><td>100</td><td>90</td></tr>
+    </table>
+    <div class="callout">※ 100점 초과 달성 = 150% 추가 지급</div>
+  </div>
+</section>
+
+<section class="card">
+  <div class="card-head">
+    <div class="num">⑤–⑧</div>
+    <h2>신인 추가 보너스</h2>
+    <span class="note">유지·교육·자격</span>
+  </div>
+
+  <div class="section">
+    <h3 class="section-title"><span class="dot"></span>⑤ 신인 유지 보너스</h3>
+    <p class="subnote">유지 환산성적 × 지급률</p>
+    <table>
+      <tr><th>구분</th><th>13회</th><th>14회</th><th>15~18회</th></tr>
+      <tr><td>일반</td><td>20%</td><td>30%</td><td class="highlight">40%</td></tr>
+      <tr><td>경력</td><td>45</td><td>55</td><td class="highlight">65</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h3 class="section-title"><span class="dot"></span>⑥ 교육이수 축하금 <small>(일반/경력)</small></h3>
+    <table>
+      <tr><th>구분</th><th>12차월</th><th>13차월</th><th>14차월</th></tr>
+      <tr><th>지급액</th><td class="highlight">70만</td><td class="highlight">55</td><td class="highlight">30</td></tr>
+      <tr><th>기준</th><td>FTC 2 수료</td><td>3 수료</td><td>4 수료</td></tr>
+    </table>
+    <p class="subnote">• 12~14차월 해당 월 기준으로 FTC 수료</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-title"><span class="dot"></span>⑦ 신인클럽 축하금 <small>(12~24차월 일반 신인FC)</small></h3>
+    <table>
+      <tr><th>구분</th><th>100만클럽 ↑</th><th>50만클럽 ↑</th></tr>
+      <tr><th>분기지급액</th><td class="highlight">100만</td><td class="highlight">50만</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h3 class="section-title"><span class="dot"></span>⑧ 변액자격 취득지원비 <small>(일반/경력)</small></h3>
+    <div class="metrics">
+      <div class="metric"><b class="highlight">10만</b><span>지원비</span></div>
+      <div class="metric"><b>13월</b><span>지급 기준</span></div>
+      <div class="metric"><b>자격 취득</b><span>지원 대상</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="card" id="contract">
+  <div class="card-head">
+    <div class="num">Ⅱ</div>
+    <h2>신계약 수수료</h2>
+    <span class="note">일반 · 경력</span>
+  </div>
+
+  <div class="section">
+    <table>
+      <tr><th>지급률</th><th>초회</th><th>2~12회</th><th>13~14회</th><th>15회</th><th>총</th></tr>
+      <tr><td>종신/GI</td><td class="highlight">112%</td><td>8</td><td>20</td><td>12</td><td>252</td></tr>
+      <tr><td>건강상해</td><td class="highlight">200</td><td>–</td><td>20</td><td>12</td><td>252</td></tr>
+      <tr><td>금융형</td><td>102</td><td>8</td><td>20</td><td>12</td><td>242</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h3 class="section-title"><span class="dot"></span>④ 경력 신인 성과 보너스</h3>
+    <p class="subnote">• 12개월부터 25개월 적용</p>
+    <table>
+      <tr><th>구분</th><th>30만 환산 달성 시 지급</th></tr>
+      <tr><td>1~11차월</td><td class="highlight">당월 환산성적 × 330%</td></tr>
+    </table>
+  </div>
+</section>
+
+<section class="card" id="management">
+  <div class="card-head">
+    <div class="num">Ⅲ</div>
+    <h2>계약관리 보너스</h2>
+    <span class="note">일반 · 경력</span>
+  </div>
+
+  <div class="section">
+    <p class="subnote">※ 설계금액 / 월초수 기준</p>
+    <table>
+      <tr><th>지급 기준</th><th>13~24회</th><th>25~36회</th><th>37~60회</th></tr>
+      <tr><th>종신/GI</th><td>14%</td><td>11</td><td>–</td></tr>
+      <tr><th>건강상해</th><td>4</td><td>3</td><td>–</td></tr>
+      <tr><th>금융형</th><td>11</td><td>8</td><td>3</td></tr>
+    </table>
+  </div>
+</section>
+
+<section class="card" id="health">
+  <div class="card-head">
+    <div class="num">Ⅳ</div>
+    <h2>건강상해 건수 보너스</h2>
+    <span class="note red">신설</span>
+  </div>
+
+  <div class="section">
+    <table>
+      <tr><th>구분</th><th>2건 ↑</th><th>3건 ↑</th><th>4건 ↑</th><th>5건 ↑</th></tr>
+      <tr><th>건강절대건수<br>OR<br>건강월초합계</th><td>15만 ↑</td><td>25만 ↑</td><td>40만 ↑</td><td>50만 ↑</td></tr>
+      <tr><th>지급률</th><td class="highlight">200%</td><td class="highlight">300</td><td class="highlight">400</td><td class="highlight">500</td></tr>
+    </table>
+  </div>
+</section>
+
+</main>
+
+<div class="footer">26년 제도 정리 · 영업관리자용 요약 페이지</div>
+</div>
+</body>
+</html>
